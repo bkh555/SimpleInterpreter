@@ -1,2 +1,4 @@
 *.xml
 *.class
+*.patch
+MicroRLexer.java
