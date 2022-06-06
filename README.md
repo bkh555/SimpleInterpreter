@@ -8,8 +8,30 @@ A continuation of a school project, this interpreter is based on a fictional lan
 JFlex and Java is used to create the lexer, validate the syntax and create the abstract syntax tree. Lisp is used to interpret the abstract syntax tree and execute the code.
 
 # Usage
-Java version: **18.0.1.1 2022-04-22**
+- Java version: **18.0.1.1 2022-04-22**
 
-JFlex version: **1.8.2**
+- JFlex version: **1.8.2**
 
-To compile, run `jflex MicroR.jflex && javac *.java` and then to execute use `java MicroRSyn < filename.R` where filename.R is your desired file.
+- Lisp version: **GNU Common Lisp**
+
+To use, run
+```
+jflex MicroR.jflex && javac *.java
+
+java MicroRSyn < filename.R
+```
+where filename.R is your desired file.
+
+To use the Lisp interpreter, run 
+```
+(load "ASTInterpreter") 
+
+(programSem 'AST) 
+``` 
+where AST is the previously produced abstracy syntax tree. For example:
+
+`(programSem '(: (: (: (: (: (: (<- (id x) (readline)) (<- (id y) 
+(readline))) (<- (id q) (integer 0))) (<- (id r) (id x))) (while (>= (id 
+r) (id y)) (: (<- (id q) (+ (id q) (integer 1))) (<- (id r) (- (id r) (id 
+y)))))) (print (id q))) (
+(print (id r))))`
