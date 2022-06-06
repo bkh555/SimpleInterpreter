@@ -1,4 +1,3 @@
-/* Brandon Hillert bkh0115 */
 %%
 %{
   private void echo () { System . out . print (yytext ()); }
