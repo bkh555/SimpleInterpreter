@@ -28,7 +28,7 @@ To use the Lisp interpreter, run
 
 (programSem 'AST) 
 ``` 
-where AST is the previously produced abstracy syntax tree. For example:
+where AST is the previously produced abstract syntax tree. For example:
 
 `(programSem '(: (: (: (: (: (: (<- (id x) (readline)) (<- (id y) 
 (readline))) (<- (id q) (integer 0))) (<- (id r) (id x))) (while (>= (id 
