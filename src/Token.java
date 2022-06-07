@@ -32,16 +32,9 @@ public class Token {
       case AND :       return "(operator, &&) ";
       case OR :        return "(operator, ||) ";
       case NOT :       return "(operator, !) ";
-      case LT :        return "(operator, <) ";
-      case LE :        return "(operator, <=) ";
-      case GT :        return "(operator, >) ";
-      case GE :        return "(operator, >=) ";
-      case EQ :        return "(operator, ==) ";
-      case NE :        return "(operator, !=) ";
-      case PLUS :      return "(operator, +) ";
-      case MINUS :     return "(operator, -) ";
       case MULOP :     return "(operator, " + lexeme + ") ";
       case RELOP :     return "(operator, " + lexeme + ") ";
+      case ADDOP :     return "(operator, " + lexeme + ") ";
       case LPAREN :    return "(operator, () ";
       case RPAREN :    return "(operator, )) ";
       case ASINTEGER : return "(keyword, as.integer) ";
@@ -66,5 +59,4 @@ public class Token {
         return null;
     }
   }
-
 }

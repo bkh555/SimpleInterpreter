@@ -12,7 +12,7 @@ JFlex and Java is used to create the lexer, validate the syntax and create the a
 
 - JFlex version: **1.8.2**
 
-- Lisp version: **GNU Common Lisp**
+- Lisp version: **GCL 2.6.12**
 
 To use, run
 ```
