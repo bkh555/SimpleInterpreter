@@ -30,8 +30,4 @@ To use the Lisp interpreter, run
 ``` 
 where AST is the previously produced abstract syntax tree. For example:
 
-`(programSem '(: (: (: (: (: (: (<- (id x) (readline)) (<- (id y) 
-(readline))) (<- (id q) (integer 0))) (<- (id r) (id x))) (while (>= (id 
-r) (id y)) (: (<- (id q) (+ (id q) (integer 1))) (<- (id r) (- (id r) (id 
-y)))))) (print (id q))) (
-(print (id r))))`
+`(programSem '(: (: (: (: (: (: (<- (id x) (readline)) (<- (id y) (readline))) (<- (id q) (integer 0))) (<- (id r) (id x))) (while (>= (id r) (id y)) (: (<- (id q) (+ (id q) (integer 1))) (<- (id r) (- (id r) (id y)))))) (print (id q) )) (print (id r) )))`
