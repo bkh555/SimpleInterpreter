@@ -7,7 +7,7 @@ public enum Symbol {
   // punctuation
   COMMA, SEMICOLON, LBRACE, RBRACE, 
   // operators
-  ASSIGN, AND, OR, NOT, LT, LE, GT, GE, EQ, NE, PLUS, MINUS, MULOP, RELOP, 
+  ASSIGN, AND, OR, NOT, ADDOP, MULOP, RELOP,
   LPAREN, RPAREN, 
   // keywords
   ASINTEGER, CONS, ELSE, FUNCTION, HEAD, IF, MAIN, NULL, PRINT, READLINE, 

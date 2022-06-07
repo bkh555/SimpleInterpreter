@@ -35,6 +35,7 @@ public class SyntaxAnalyzer {
     getToken ();
     while (token . symbol () == Symbol . ID) 	// {FunctionDef}
       System.out.println(functionDef ());
+
     System.out.println(mainDef());
     if (token . symbol () != Symbol . EOF) 
       ErrorMessage . print (lexer . position (), "END OF PROGRAM EXPECTED");
@@ -115,7 +116,7 @@ public class SyntaxAnalyzer {
     Statement stmt = statementList();                      	// StatementList
     if (token . symbol () != Symbol . RBRACE) 	// "}"
       ErrorMessage . print (lexer . position (), "} EXPECTED");
-    getToken ();
+    getToken();
     return stmt;
   }
 
@@ -126,14 +127,14 @@ public class SyntaxAnalyzer {
     while (token . symbol () == Symbol . IF  	// {
         || token . symbol () == Symbol . WHILE
         || token . symbol () == Symbol . ID
-        || token . symbol () == Symbol . PRINT){
-	if(stmt1 == null)
-		stmt1 = statement();
-	else{
-		stmt2 = statement();
-		if(stmt2 != null)
-			stmt1 = new Statement (stmt1, stmt2);
-	}
+        || token . symbol () == Symbol . PRINT) {
+      if (stmt1 == null) {
+        stmt1 = statement();
+      } else {
+        stmt2 = statement();
+        if (stmt2 != null)
+          stmt1 = new Statement(stmt1, stmt2);
+      }
     }
     return stmt1;
   }
@@ -158,7 +159,7 @@ public class SyntaxAnalyzer {
         if (token . symbol () != Symbol . LBRACE) 	// "{"
           ErrorMessage . print (lexer . position (), "{ EXPECTED");
         getToken ();
-        stmt1 = statement ();                       	// StatementList
+        stmt1 = statementList ();                       	// StatementList
         if (token . symbol () != Symbol . RBRACE) 	// "}"
           ErrorMessage . print (lexer . position (), "} EXPECTED");
         getToken ();
@@ -172,7 +173,7 @@ public class SyntaxAnalyzer {
             ErrorMessage . print (lexer . position (), "} EXPECTED");
           getToken ();
         }                                        	// ]
-	stmt = new Conditional(exp, stmt1, stmt2);
+	    stmt = new Conditional(exp, stmt1, stmt2);
         break;
 
       case WHILE :                                  	// while
@@ -187,30 +188,36 @@ public class SyntaxAnalyzer {
         if (token . symbol () != Symbol . LBRACE) 	// "{"
           ErrorMessage . print (lexer . position (), "{ EXPECTED");
         getToken ();
-        stmt1 = statement ();
-	stmt = new Loop (exp, stmt1);                       	// StatementList
+        stmt1 = statementList ();
+	    stmt = new Loop (exp, stmt1);                       	// StatementList
         if (token . symbol () != Symbol . RBRACE) 	// "}"
           ErrorMessage . print (lexer . position (), "} EXPECTED");
         getToken ();
         break;
 
-      case ID :                                  	// id
+      case ID :
+        id = token . lexeme();    // id
         getToken ();
+        var = new VariableRef(id);
         if (token . symbol () != Symbol . ASSIGN)  	// <-
           ErrorMessage . print (lexer . position (), "<- EXPECTED");
-        getToken ();
-        exp = cond ();                                 	// Expr
-        if (token . symbol () != Symbol . SEMICOLON)  	// ; 
+        getToken();
+        exp = cond();
+        stmt = new Assignment(var, exp);
+        if (token . symbol () != Symbol . SEMICOLON)  	// ;
           ErrorMessage . print (lexer . position (), "; EXPECTED");
-        getToken ();
+        getToken();
         break;
 
-      case PRINT :                                  	// print
+      case PRINT :      // print
         getToken ();
         if (token . symbol () != Symbol . LPAREN)  	// (
           ErrorMessage . print (lexer . position (), "( EXPECTED");
         getToken ();
-        exp = cond ();                                 	// Expr
+        id = token . lexeme();
+        var = new VariableRef(id);
+        exp = cond ();              // Expr
+        stmt = new Prints(var);
         if (token . symbol () != Symbol . RPAREN) 	// )
           ErrorMessage . print (lexer . position (), ") EXPECTED");
         getToken ();
@@ -256,65 +263,57 @@ public class SyntaxAnalyzer {
     Expression relation = null;
     String op;
     relation = addition();
-    if(token.symbol() == Symbol.RELOP){
-	op = token.lexeme();
-        getToken();
-	relation = new Binary (op, relation, addition());
+    while(token.symbol() == Symbol.RELOP){
+      op = token.lexeme();
+      getToken();
+	  relation = new Binary (op, relation, addition());
     }
     return relation;
   }
 
+  
   // MulExpr ::= PrefixExpr {MulOper PrefixExpr}
   // MulOper ::= * | /
 
   public Expression addition () throws IOException {
     Expression addition;
     String op;
-    addition = factor();
-    while(token.symbol() == Symbol.PLUS || token.symbol() == Symbol.MINUS){
-	if(token.symbol() == Symbol.PLUS)
-		op = "+";
-	else
-		op = "-";
+    addition = mul();
+    while(token.symbol() == Symbol.ADDOP){
+        op = token . lexeme ();
         getToken();
-        addition = new Binary (op, addition, term());
+        addition = new Binary (op, addition, mul());
     }
     return addition;
-
   }
 
-   public Expression term () throws IOException {
-    Expression term;
+   public Expression mul () throws IOException {
+    Expression mul;
     String op;
-    term = factor();
+    mul = prefixExpr();
     while(token.symbol() == Symbol.MULOP){
-	op = token.lexeme();
+	    op = token.lexeme();
         getToken();
-        term = new Binary (op, term, factor());
+        mul = new Binary (op, mul, prefixExpr());
     }
-    return term;
-
+    return mul;
   }
 
 
   public Expression factor () throws IOException {
     Expression factor, primary;
     String op = null;
-    if(token.symbol() == Symbol.MINUS){
-        op = "-";
-	getToken();
+    if(token.symbol() == Symbol . ADDOP){
+        op = token . lexeme();
+	    getToken();
     }
-    else if(token.symbol() == Symbol.NOT){
-	op = "!";
-	getToken();
-    }
+
     primary = prefixExpr();
     if (op != null)
-	factor = new Unary (op, primary);
+	  factor = new Unary (op, primary);
     else
-	factor = primary;
+	  factor = primary;
     return factor;
-
   }
 
 
@@ -330,13 +329,13 @@ public class SyntaxAnalyzer {
     switch (token . symbol ()) {
 
       case INTEGER :   
-	primary = new IntValue(Integer.parseInt(token.lexeme()));                          	// integer
+	    primary = new IntValue(Integer.parseInt(token.lexeme()));                          	// integer
         getToken ();
         break;
 
       case LPAREN :                                  	// (
         getToken ();
-        primary = cond ();                                	// Expr
+        primary = addition ();                                	// Expr
         if (token . symbol () != Symbol . RPAREN)  	// )
           ErrorMessage . print (lexer . position (), ") EXPECTED");
         getToken ();
@@ -359,23 +358,28 @@ public class SyntaxAnalyzer {
         if (token . symbol () != Symbol . RPAREN)  	// )
           ErrorMessage . print (lexer . position (), ") EXPECTED");
         getToken ();
+        if (token . symbol () != Symbol . SEMICOLON)  	// ;
+          ErrorMessage . print (lexer . position (), "; EXPECTED");
+        primary = new ReadLine();
         break;
 
-      case ID :                                 	// id
+      case ID :
+        id = token . lexeme(); // id
         getToken ();
-        if (token . symbol () == Symbol . LPAREN) { 	// [ (
-          getToken ();
-          if (token . symbol () != Symbol . RPAREN) { 	// [
-            exp = cond ();                            	// Expr
-            while (token . symbol () == Symbol . COMMA) { // { ,
-              getToken ();
-              exp = cond ();                           	// Expr }
-            }                                    	// ]
+        if (token . symbol () != Symbol . LPAREN) {
+          primary = new VariableRef(id);
+        }
+        else { 	// [
+            getToken();
+            exp = cond();
+            primary = new ArrayRef(id, exp);
+            while (token . symbol () == Symbol . COMMA){
+              exp = cond();
+            }
             if (token . symbol () != Symbol . RPAREN) 	// )
               ErrorMessage . print (lexer . position (), ") EXPECTED");
+            getToken();
           }                                      	// ]
-          getToken ();
-        }
         break;
 
       case CONS :                               	// cons
@@ -430,5 +434,4 @@ public class SyntaxAnalyzer {
     }
 	return primary;
   }
-
 }

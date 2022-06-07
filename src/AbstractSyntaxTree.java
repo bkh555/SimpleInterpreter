@@ -19,7 +19,6 @@ class Statement extends Program {
      else
        return "(: " + stmt1 + " " + stmt2 + ")";
    }
-
 }
 
 class Assignment extends Statement {
@@ -33,11 +32,24 @@ class Assignment extends Statement {
      this . lhs = lhs;
      this . rhs = rhs;
    }
-
    public String toString () {
-     return "(= " + lhs + " " + rhs + ")";
+     return "(<- " + lhs + " " + rhs + ")";
    }
+}
 
+class Prints extends Statement {
+
+    protected VariableRef lhs;
+
+    public Prints () { }
+
+    public Prints (VariableRef lhs) {
+        this . lhs = lhs;
+    }
+
+    public String toString () {
+        return "(print " + lhs + " " + ")";
+    }
 }
 
 class Conditional extends Statement {
@@ -52,11 +64,9 @@ class Conditional extends Statement {
     this . thenStmt = thenStmt;
     this . elseStmt = elseStmt;
   }
-
   public String toString () {
      return "(if " + test + " " + thenStmt + " " + elseStmt + ")";
    }
-
 }
 
 class Loop extends Statement {
@@ -70,11 +80,24 @@ class Loop extends Statement {
     this . test = test;
     this . body = body;
   }
-
   public String toString () {
      return "(while " + test + " " + body + ")";
    }
+}
 
+class ArrayRef extends VariableRef {
+
+    protected Expression index;
+
+    public ArrayRef () { }
+
+    public ArrayRef (String id, Expression index) {
+        super (id);
+        this . index = index;
+    }
+    public String toString () {
+        return "([] " + super . toString () + " " + index + ")";
+    }
 }
 
 abstract class Expression { }
@@ -92,7 +115,6 @@ class VariableRef extends Expression {
   public String toString () {
     return "(id " + id + ")";
   }
-
 }
 
 abstract class Value extends Expression { }
@@ -108,9 +130,18 @@ class IntValue extends Value {
   }
 
   public String toString () {
-    return "(intValue " + intValue + ")";
+    return "(integer " + intValue + ")";
   }
 
+}
+
+class ReadLine extends Value {
+
+    public ReadLine () { }
+
+    public String toString () {
+        return "(readline)";
+    }
 }
 
 class Binary extends Expression {
@@ -125,11 +156,9 @@ class Binary extends Expression {
     this . term1 = term1;
     this . term2 = term2;
   }
-
   public String toString () {
     return "(" + op + " " + term1 + " " + term2 + ")";
   }
-
 }
 
 class Unary extends Expression {
@@ -143,9 +172,7 @@ class Unary extends Expression {
     this . op = op;
     this . term = term;
   }
-
   public String toString () {
     return "(" + op + " " + term + ")";
   }
-
 }
