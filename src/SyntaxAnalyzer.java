@@ -249,24 +249,24 @@ public class SyntaxAnalyzer {
 
   public Expression andExpr () throws IOException {
     Expression andExp;
-    andExp = relation ();                                	// relExpr
+    andExp = relExpr ();                                	// relExpr
     while (token . symbol () == Symbol . AND) { // { &&
       getToken ();
-      andExp = new Binary("&&", andExp, relation ());                              	// relExpr }
+      andExp = new Binary("&&", andExp, relExpr ());                              	// relExpr }
     }
     return andExp;
   }
 
   // RelExpr ::= [!] Expr RelOper Expr
 
-  public Expression relation () throws IOException {
+  public Expression relExpr () throws IOException {
     Expression relation = null;
     String op;
-    relation = addition();
+    relation = Expr ();
     while(token.symbol() == Symbol.RELOP){
       op = token.lexeme();
       getToken();
-	  relation = new Binary (op, relation, addition());
+	  relation = new Binary (op, relation, Expr ());
     }
     return relation;
   }
@@ -275,32 +275,32 @@ public class SyntaxAnalyzer {
   // MulExpr ::= PrefixExpr {MulOper PrefixExpr}
   // MulOper ::= * | /
 
-  public Expression addition () throws IOException {
+  public Expression Expr () throws IOException {
     Expression addition;
     String op;
-    addition = mul();
+    addition = mulExpr ();
     while(token.symbol() == Symbol.ADDOP){
         op = token . lexeme ();
         getToken();
-        addition = new Binary (op, addition, mul());
+        addition = new Binary (op, addition, mulExpr ());
     }
     return addition;
   }
 
-   public Expression mul () throws IOException {
+   public Expression mulExpr () throws IOException {
     Expression mul;
     String op;
-    mul = prefixExpr();
+    mul = simpleExpr ();
     while(token.symbol() == Symbol.MULOP){
 	    op = token.lexeme();
         getToken();
-        mul = new Binary (op, mul, prefixExpr());
+        mul = new Binary (op, mul, simpleExpr ());
     }
     return mul;
   }
 
 
-  public Expression factor () throws IOException {
+  public Expression prefixExpr () throws IOException {
     Expression factor, primary;
     String op = null;
     if(token.symbol() == Symbol . ADDOP){
@@ -308,7 +308,7 @@ public class SyntaxAnalyzer {
 	    getToken();
     }
 
-    primary = prefixExpr();
+    primary = simpleExpr ();
     if (op != null)
 	  factor = new Unary (op, primary);
     else
@@ -322,7 +322,7 @@ public class SyntaxAnalyzer {
   //   | id [ ( [Expr {, Expr}] ) ] | cons ( Expr , Expr ) | head ( Expr ) 
   //   | tail ( Expr ) | null ( )
 
-  public Expression prefixExpr () throws IOException {
+  public Expression simpleExpr () throws IOException {
     Expression exp, primary = null;
     String id, type;
 
@@ -335,7 +335,7 @@ public class SyntaxAnalyzer {
 
       case LPAREN :                                  	// (
         getToken ();
-        primary = addition ();                                	// Expr
+        primary = Expr ();                                	// Expr
         if (token . symbol () != Symbol . RPAREN)  	// )
           ErrorMessage . print (lexer . position (), ") EXPECTED");
         getToken ();
