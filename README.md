@@ -1,7 +1,7 @@
-# MicroRInterpreter 
+# SimpleInterpreter 
 ###### A practice interpreter made with JFlex, Java and Lisp 
 # About
-A continuation of a school project, this interpreter is based on a fictional language called MicroR, a subset of R, and the extended BNF grammar is shown here.
+A continuation of a school project, this interpreter is based on R, and the extended BNF grammar is shown here.
 
 ![Capture](https://user-images.githubusercontent.com/78707594/172248679-8ee9b172-7b74-43a5-a0b3-9ebd98dd028a.PNG)
 
