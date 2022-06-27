@@ -18,7 +18,7 @@ To use, run
 ```
 jflex MicroR.jflex && javac *.java
 
-java MicroRSyn < filename.R
+java MicroRSyn < ../Tests/filename.R
 ```
 where filename.R is your desired file.
 
