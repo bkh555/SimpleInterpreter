@@ -1,5 +1,5 @@
 // MicroRSyn.java
-
+// This program uses code structured like a different program provided by the UNT CSCE department 
 // This program is a recursive descent parser for MicroR.
 
 public class MicroRSyn {
