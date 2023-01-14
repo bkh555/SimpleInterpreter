@@ -1,8 +1,7 @@
 # SimpleInterpreter 
 ###### A practice interpreter made with JFlex, Java and Lisp 
 # About
-This interpreter is being developed for a simple fabricated language, MicroR, as the extended BNF grammar was provided by my university for an assignment.
-(Interestingly, this assignment is actually from a seperate university that developed the "Clite" language instead.)
+This interpreter is being developed for a simple fabricated language.
 
 
 ![Capture](https://user-images.githubusercontent.com/78707594/172248679-8ee9b172-7b74-43a5-a0b3-9ebd98dd028a.PNG)
